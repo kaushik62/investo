@@ -83,7 +83,7 @@ export default function Login() {
           </h2>
           {[
             { icon: '💰', title: '₹10 Lakh Virtual Cash', desc: 'Start trading immediately with virtual money' },
-            { icon: '📈', title: 'Real NSE Market Data', desc: 'Live prices from Yahoo Finance API' },
+            { icon: '📈', title: 'Real NSE Market Data', desc: 'Live prices from API' },
             { icon: '🏆', title: 'Monthly Competitions', desc: 'Compete with traders across India' },
             { icon: '📊', title: 'Portfolio Analytics', desc: 'Charts, P&L tracking, and reports' },
           ].map((f, i) => (
