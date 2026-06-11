@@ -83,22 +83,6 @@ Redis is **optional** — the app works without it using in-memory fallback.
 | `leaderboard:all` | 2min | Rankings |
 | `admin:stats` | 60s | Admin dashboard stats |
 
-### Install Redis:
-**Windows:** https://github.com/microsoftarchive/redis/releases
-**Mac:** `brew install redis && brew services start redis`
-**Linux:** `sudo apt install redis-server && sudo systemctl start redis`
-
----
-
-## 📊 Alpha Vantage (Live Prices)
-
-Get free key: https://www.alphavantage.co/support/#api-key
-
-Free tier: 25 req/day — enough with Redis caching (1 req per 60s rotation)
-
-Without key: app uses realistic mock prices with random walk.
-
----
 
 ## 🛠 Tech Stack
 
