@@ -1,10 +1,10 @@
-# 📉 Investo — Virtual Indian Stock Market Simulator
+# Investo — Virtual Indian Stock Market Simulator
 
 Full-stack MERN app with Redis caching, Alpha Vantage live prices, Socket.IO real-time updates.
 
 ---
 
-## ⚡ Quick Start
+##  Quick Start
 
 ### 1. Install
 ```
@@ -41,7 +41,7 @@ npm run dev
 
 ---
 
-## 🔐 Admin Access
+## Admin Access
 
 ### Option A — Admin Login Page (recommended)
 Go to: **http://localhost:3000/admin/login**
@@ -58,19 +58,19 @@ Login as admin via http://localhost:3000/login → click your name → **Admin**
 
 ---
 
-## 🛡️ Admin Capabilities
+## Admin Capabilities
 
 | Tab | Features |
 |-----|---------|
-| 📊 Overview | Daily trade chart, most traded stocks, revenue stats |
-| 👥 Users | Search users, block/unblock, promote to admin, adjust wallet ₹, delete |
-| 📋 Transactions | All trades across all users, filter by BUY/SELL |
-| 🏆 Competition | Create/manage monthly competitions |
-| 📢 Broadcast | Send real-time notification to ALL users via Socket.IO |
+| Overview | Daily trade chart, most traded stocks, revenue stats |
+| Users | Search users, block/unblock, promote to admin, adjust wallet ₹, delete |
+| Transactions | All trades across all users, filter by BUY/SELL |
+| Competition | Create/manage monthly competitions |
+| Broadcast | Send real-time notification to ALL users via Socket.IO |
 
 ---
 
-## 🗄️ Redis Caching
+## Redis Caching
 
 Redis is **optional** — the app works without it using in-memory fallback.
 
@@ -84,7 +84,7 @@ Redis is **optional** — the app works without it using in-memory fallback.
 | `admin:stats` | 60s | Admin dashboard stats |
 
 
-## 🛠 Tech Stack
+## Tech Stack
 
 | Layer | Tech |
 |-------|------|
@@ -99,7 +99,7 @@ Redis is **optional** — the app works without it using in-memory fallback.
 
 ---
 
-## 📁 Structure
+## Structure
 
 ```
 Investo/

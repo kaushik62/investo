@@ -19,7 +19,7 @@ router.get('/', auth, async (req, res) => {
     const stockMap   = Object.fromEntries(stocks.map(s => [s.symbol, s.price]));
 
     const portfolios = await Portfolio.find().populate('userId', 'name email avatar');
-    const rankings   = [];
+    const rankings = [];
 
     for (const portfolio of portfolios) {
       if (!portfolio.userId) continue;
