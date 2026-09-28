@@ -19,8 +19,7 @@ API.interceptors.response.use(
   (err) => {
     if (err.response?.status === 401 && !_redirecting) {
       // Only redirect if we have a token (means it expired / invalid)
-      // Don't redirect on pages that don't need auth (login, register, admin/login)
-      const publicPaths = ['/login', '/register', '/admin/login']
+      const publicPaths = ['/login', '/register']
       const isPublicPage = publicPaths.some(p => window.location.pathname === p)
       const hasToken = !!localStorage.getItem('token')
 
@@ -41,7 +40,6 @@ API.interceptors.response.use(
 export const authAPI = {
   register:      (d) => API.post('/auth/register', d),
   login:         (d) => API.post('/auth/login', d),
-  adminLogin:    (d) => API.post('/auth/admin/login', d),
   getProfile:    ()  => API.get('/auth/me'),
   updateProfile: (d) => API.put('/auth/profile', d),
   changePassword:(d) => API.put('/auth/change-password', d),
@@ -73,22 +71,6 @@ export const watchlistAPI = {
 
 export const transactionAPI = {
   get: (params) => API.get('/transactions', { params }),
-}
-
-export const leaderboardAPI = {
-  get:            () => API.get('/leaderboard'),
-  getCompetition: () => API.get('/leaderboard/competition'),
-}
-
-export const adminAPI = {
-  getStats:           ()       => API.get('/admin/stats'),
-  getUsers:           (params) => API.get('/admin/users', { params }),
-  getUser:            (id)     => API.get(`/admin/users/${id}`),
-  toggleUser:         (id)     => API.put(`/admin/users/${id}/toggle`),
-  broadcast:          (data)   => API.post('/admin/broadcast', data),
-  getTransactions:    (params) => API.get('/admin/transactions', { params }),
-  createCompetition:  (data)   => API.post('/admin/competition', data),
-  updateCompetition:  (id, d)  => API.put(`/admin/competition/${id}`, d),
 }
 
 export const notificationAPI = {

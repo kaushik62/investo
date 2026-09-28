@@ -96,10 +96,10 @@ export default function Dashboard() {
       {/* Quick actions */}
       <div style={{ display: 'flex', gap: 10, marginBottom: '2rem', flexWrap: 'wrap' }}>
         {[
-          { to: '/market',      label: '📊 Browse Stocks' },
-          { to: '/portfolio',   label: '💼 Portfolio' },
-          { to: '/leaderboard', label: '🏆 Leaderboard' },
-          { to: '/watchlist',   label: '👁️ Watchlist' },
+          { to: '/market',       label: '📊 Browse Stocks' },
+          { to: '/portfolio',    label: '💼 Portfolio' },
+          { to: '/watchlist',    label: '👁️ Watchlist' },
+          { to: '/transactions', label: '📜 Transactions' },
         ].map((a) => (
           <Link key={a.to} to={a.to}>
             <button className="btn btn-ghost" style={{ fontSize: '0.84rem' }}>{a.label}</button>

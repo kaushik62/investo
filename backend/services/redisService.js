@@ -112,16 +112,12 @@ const KEYS = {
   stockQuote:    (sym) => `stocks:quote:${sym}`,
   stockHistory:  (sym, tf) => `stocks:history:${sym}:${tf}`,
   portfolio:     (uid) => `portfolio:${uid}`,
-  leaderboard:    'leaderboard:all',
-  adminStats:     'admin:stats',
 };
 
 const TTL = {
   stocks:      60,       // 1 min  — market data
   history:     300,      // 5 min  — historical charts
   portfolio:   30,       // 30 sec — portfolio (invalidated on trade)
-  leaderboard: 120,      // 2 min
-  adminStats:  60,       // 1 min
 };
 
 module.exports = { connect, set, get, del, delPattern, getStatus, KEYS, TTL };

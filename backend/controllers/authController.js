@@ -2,7 +2,6 @@ const jwt  = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
 const User      = require('../models/User');
 const Portfolio = require('../models/Portfolio');
-const redis     = require('../services/redisService');
 
 const generateToken = (id) =>
   jwt.sign({ id }, process.env.JWT_SECRET || 'fallback_secret', {
@@ -27,7 +26,6 @@ const register = async (req, res) => {
       name:      name.trim(),
       email:     email.toLowerCase(),
       password,
-      role:      'user',
       watchlists:[{ name: 'My Watchlist', stocks: [] }],
     });
     await Portfolio.create({ userId: user._id, holdings: [] });
@@ -53,7 +51,7 @@ const login = async (req, res) => {
       return res.status(401).json({ success: false, error: 'Invalid email or password.' });
     }
     if (!user.isActive) {
-      return res.status(403).json({ success: false, error: 'Your account has been blocked. Contact admin.' });
+      return res.status(403).json({ success: false, error: 'Your account has been blocked.' });
     }
 
     const isMatch = await user.comparePassword(password);
@@ -67,37 +65,6 @@ const login = async (req, res) => {
     const token   = generateToken(user._id);
     const userObj = user.toJSON();
     res.json({ success: true, token, user: userObj });
-  } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
-  }
-};
-
-// ── Admin Login (separate endpoint) ──────────────────────────
-const adminLogin = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    if (!email || !password) {
-      return res.status(400).json({ success: false, error: 'Email and password required.' });
-    }
-
-    const user = await User.findOne({ email: email.toLowerCase(), role: 'admin' }).select('+password');
-    if (!user) {
-      return res.status(401).json({ success: false, error: 'No admin account found with this email.' });
-    }
-    if (!user.isActive) {
-      return res.status(403).json({ success: false, error: 'Admin account is blocked.' });
-    }
-
-    const isMatch = await user.comparePassword(password);
-    if (!isMatch) {
-      return res.status(401).json({ success: false, error: 'Invalid admin password.' });
-    }
-
-    user.lastLogin = new Date();
-    await user.save();
-
-    const token = generateToken(user._id);
-    res.json({ success: true, token, user: user.toJSON(), message: `Welcome back, ${user.name}! You are logged in as Admin.` });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
@@ -148,4 +115,4 @@ const changePassword = async (req, res) => {
   }
 };
 
-module.exports = { register, login, adminLogin, getProfile, updateProfile, changePassword };
+module.exports = { register, login, getProfile, updateProfile, changePassword };

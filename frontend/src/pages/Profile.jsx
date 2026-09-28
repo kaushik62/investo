@@ -53,11 +53,6 @@ export default function Profile() {
             <div>
               <div className="font-display" style={{ fontSize: '1.2rem', fontWeight: 700 }}>{user?.name}</div>
               <div style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>{user?.email}</div>
-              {user?.role === 'admin' && (
-                <div style={{ marginTop: 6 }}>
-                  <span className="badge badge-red">Admin</span>
-                </div>
-              )}
             </div>
           </div>
 

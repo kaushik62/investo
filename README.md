@@ -41,35 +41,6 @@ npm run dev
 
 ---
 
-## Admin Access
-
-### Option A — Admin Login Page (recommended)
-Go to: **http://localhost:3000/admin/login**
-
-| Field    | Value               |
-|----------|---------------------|
-| Email    | `admin@Investo.com` |
-| Password | `admin123456`       |
-
-> Credentials are clickable on the login page — just click them to autofill.
-
-### Option B — Regular login then navigate
-Login as admin via http://localhost:3000/login → click your name → **Admin**
-
----
-
-## Admin Capabilities
-
-| Tab | Features |
-|-----|----------|
-| Overview | Daily trade chart, most traded stocks, revenue stats |
-| Users | Search users, block/unblock, promote to admin, adjust wallet ₹, delete |
-| Transactions | All trades across all users, filter by BUY/SELL |
-| Competition | Create/manage monthly competitions |
-| Broadcast | Send real-time notification to ALL users via Socket.IO |
-
----
-
 ## Redis Caching
 
 Redis is **optional** — the app works without it using in-memory fallback.
@@ -80,8 +51,6 @@ Redis is **optional** — the app works without it using in-memory fallback.
 | `stocks:quote:{sym}` | 60s | Individual quote |
 | `stocks:history:{sym}:{tf}` | 5min | Historical chart data |
 | `portfolio:{userId}` | 30s | User portfolio (invalidated on trade) |
-| `leaderboard:all` | 2min | Rankings |
-| `admin:stats` | 60s | Admin dashboard stats |
 
 ---
 
@@ -107,17 +76,16 @@ Investo/
 │   ├── server.js
 │   ├── .env.example
 │   ├── controllers/     authController, stockController, portfolioController, tradeController
-│   ├── middleware/      auth.js (JWT + admin guards)
-│   ├── models/          User, Portfolio, Transaction, Competition
+│   ├── middleware/      auth.js (JWT auth)
+│   ├── models/          User, Portfolio, Transaction
 │   ├── routes/          auth, stocks, trades, portfolio, watchlist, transactions,
-│   │                    leaderboard, admin, export, notifications
-│   ├── services/        stockService (AV), socketService, cronService, redisService
+│   │                    export, notifications
+│   ├── services/        stockService (AV), socketService, redisService
 │   └── utils/           setupDatabase.js (auto-seed)
 └── frontend/
     └── src/
-        ├── pages/       Login, Register, AdminLogin, Dashboard, Market,
-        │                StockDetail, Portfolio, Watchlist, Transactions,
-        │                Leaderboard, Profile, Admin
+        ├── pages/       Login, Register, Dashboard, Market,
+        │                StockDetail, Portfolio, Watchlist, Transactions, Profile
         ├── components/  Navbar, StockTicker, Spinner, ProtectedRoute, AppLayout
         ├── context/     AuthContext, MarketContext
         └── services/    api.js, socket.js
@@ -126,3 +94,4 @@ Investo/
 ---
 
 MIT License · Virtual trading only · No real money 🇮🇳
+

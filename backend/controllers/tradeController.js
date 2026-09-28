@@ -9,7 +9,6 @@ const redis = require('../services/redisService');
 async function invalidateAfterTrade(userId) {
   await Promise.all([
     redis.del(redis.KEYS.portfolio(userId.toString())),
-    redis.del(redis.KEYS.leaderboard),
     redis.del(redis.KEYS.allStocks),   // force fresh market data
   ]);
 }

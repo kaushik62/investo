@@ -55,13 +55,6 @@ export function AuthProvider({ children }) {
     return u
   }
 
-  // ── Admin login (sets token + user directly) ──────────────
-  const loginWithToken = (token, u) => {
-    localStorage.setItem('token', token)
-    setUser(u)
-    initSocket(u._id)
-  }
-
   // ── Logout ────────────────────────────────────────────────
   const logout = () => {
     localStorage.removeItem('token')
@@ -78,7 +71,7 @@ export function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, loginWithToken, logout, refreshUser }}>
+    <AuthContext.Provider value={{ user, loading, login, register, logout, refreshUser }}>
       {children}
     </AuthContext.Provider>
   )

@@ -68,7 +68,7 @@ export function MarketProvider({ children }) {
         if (data?.price) setNifty(data)
       })
 
-      // Real-time notification (from admin broadcast or price alerts)
+      // Real-time notification (e.g. price alerts or system notifications)
       sock.on('notification', (n) => {
         const id       = Date.now()
         const newNotif = {

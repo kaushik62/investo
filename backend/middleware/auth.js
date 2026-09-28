@@ -14,7 +14,7 @@ const auth = async (req, res, next) => {
       return res.status(401).json({ success: false, error: 'User not found.' });
     }
     if (!user.isActive) {
-      return res.status(403).json({ success: false, error: 'Your account has been blocked. Contact admin.' });
+      return res.status(403).json({ success: false, error: 'Your account has been blocked.' });
     }
     req.user = user;
     next();
@@ -26,14 +26,4 @@ const auth = async (req, res, next) => {
   }
 };
 
-const adminAuth = async (req, res, next) => {
-  // Run normal auth first, then check role
-  auth(req, res, () => {
-    if (req.user?.role !== 'admin') {
-      return res.status(403).json({ success: false, error: 'Access denied. Admin only.' });
-    }
-    next();
-  });
-};
-
-module.exports = { auth, adminAuth };
+module.exports = { auth };

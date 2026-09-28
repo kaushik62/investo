@@ -2,21 +2,18 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AuthProvider } from './context/AuthContext'
 import { MarketProvider } from './context/MarketContext'
-import { ProtectedRoute, AdminRoute, PublicRoute } from './components/common/ProtectedRoute'
+import { ProtectedRoute, PublicRoute } from './components/common/ProtectedRoute'
 import AppLayout from './components/layout/AppLayout'
 
 import Login        from './pages/Login'
 import Register     from './pages/Register'
-import AdminLogin   from './pages/AdminLogin'
 import Dashboard    from './pages/Dashboard'
 import Market       from './pages/Market'
 import StockDetail  from './pages/StockDetail'
 import Portfolio    from './pages/Portfolio'
 import Watchlist    from './pages/Watchlist'
 import Transactions from './pages/Transactions'
-import Leaderboard  from './pages/Leaderboard'
 import Profile      from './pages/Profile'
-import Admin        from './pages/Admin'
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { staleTime: 30_000, retry: 1 } },
@@ -39,9 +36,6 @@ export default function App() {
                 <Route path="/register"    element={<Register />} />
               </Route>
 
-              {/* Admin login — always accessible */}
-              <Route path="/admin/login" element={<AdminLogin />} />
-
               {/* Protected — must be logged in */}
               <Route element={<ProtectedRoute />}>
                 <Route path="/dashboard"    element={<Wrap><Dashboard    /></Wrap>} />
@@ -50,13 +44,7 @@ export default function App() {
                 <Route path="/portfolio"    element={<Wrap><Portfolio      /></Wrap>} />
                 <Route path="/watchlist"    element={<Wrap><Watchlist      /></Wrap>} />
                 <Route path="/transactions" element={<Wrap><Transactions   /></Wrap>} />
-                <Route path="/leaderboard"  element={<Wrap><Leaderboard    /></Wrap>} />
                 <Route path="/profile"      element={<Wrap><Profile        /></Wrap>} />
-              </Route>
-
-              {/* Admin only */}
-              <Route element={<AdminRoute />}>
-                <Route path="/admin" element={<Wrap><Admin /></Wrap>} />
               </Route>
 
               <Route path="/"   element={<Navigate to="/dashboard" replace />} />

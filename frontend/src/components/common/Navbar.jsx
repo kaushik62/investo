@@ -9,15 +9,13 @@ const NAV = [
   { to: '/portfolio',    label: 'Portfolio' },
   { to: '/watchlist',    label: 'Watchlist' },
   { to: '/transactions', label: 'Transactions' },
-  { to: '/leaderboard',  label: 'Leaderboard' },
 ]
 
 // Icon map for notification types
 const NOTIF_ICONS = {
-  trade:       '📊',
-  alert:       '🔔',
-  competition: '🏆',
-  system:      '📢',
+  trade:  '📊',
+  alert:  '🔔',
+  system: '📢',
 }
 
 // Relative time formatter
@@ -190,7 +188,7 @@ export default function Navbar() {
                         <div style={{ fontSize: '2rem', marginBottom: 8 }}>🔕</div>
                         <p style={{ fontSize: '0.875rem', margin: 0 }}>No notifications yet</p>
                         <p style={{ fontSize: '0.78rem', marginTop: 4, color: 'var(--text-secondary)' }}>
-                          Admin broadcasts and price alerts will appear here
+                          Price alerts and trade updates will appear here
                         </p>
                       </div>
                     ) : (
@@ -292,9 +290,7 @@ export default function Navbar() {
                     </div>
                   </div>
                   {[
-                    { to: '/profile',      label: '👤 Profile' },
-                    
-                    ...(user?.role === 'admin' ? [{ to: '/admin', label: '🛡️ Admin' }] : []),
+                    { to: '/profile', label: '👤 Profile' },
                   ].map(item => (
                     <Link key={item.to} to={item.to} onClick={() => setMenu(false)} style={{
                       display: 'block', padding: '7px 12px', borderRadius: 8, textDecoration: 'none',
@@ -349,18 +345,18 @@ export default function Navbar() {
 
 // ── Helpers ───────────────────────────────────────────────────
 function getNotifBg(type) {
-  const map = { trade:'rgba(6,214,160,0.12)', alert:'rgba(255,209,102,0.12)', competition:'rgba(239,35,60,0.12)', system:'rgba(67,97,238,0.12)' }
+  const map = { trade:'rgba(6,214,160,0.12)', alert:'rgba(255,209,102,0.12)', system:'rgba(67,97,238,0.12)' }
   return map[type] || 'rgba(67,97,238,0.12)'
 }
 function getNotifBadge(type) {
-  const map = { trade:'green', alert:'gold', competition:'red', system:'blue' }
+  const map = { trade:'green', alert:'gold', system:'blue' }
   return map[type] || 'blue'
 }
 function getNotifAccentColor(type) {
-  const map = { trade:'var(--green)', alert:'var(--gold)', competition:'var(--red)', system:'var(--blue)' }
+  const map = { trade:'var(--green)', alert:'var(--gold)', system:'var(--blue)' }
   return map[type] || 'var(--blue)'
 }
 function getNotifBorderColor(type) {
-  const map = { trade:'rgba(6,214,160,0.25)', alert:'rgba(255,209,102,0.25)', competition:'rgba(239,35,60,0.25)', system:'rgba(67,97,238,0.25)' }
+  const map = { trade:'rgba(6,214,160,0.25)', alert:'rgba(255,209,102,0.25)', system:'rgba(67,97,238,0.25)' }
   return map[type] || 'var(--border)'
 }

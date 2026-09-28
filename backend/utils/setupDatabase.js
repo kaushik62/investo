@@ -3,52 +3,45 @@ const mongoose = require('mongoose');
 async function setupDatabase() {
   const User        = require('../models/User');
   const Portfolio   = require('../models/Portfolio');
-  const Competition = require('../models/Competition');
+  const Transaction = require('../models/Transaction');
 
   console.log('🔧 Running database setup…');
 
-  // ── 1. Ensure indexes are created ────────────────────────
-  await User.createIndexes();
-  await Portfolio.createIndexes();
-  await Competition.createIndexes();
-  console.log('  ✅ Indexes ensured');
-
-  // ── 2. Seed demo admin if no users exist ─────────────────
-  const userCount = await User.countDocuments();
-  if (userCount === 0) {
-    const admin = await User.create({
-      name: 'Admin',
-      email: 'admin@Investo.com',
-      password: 'admin123456',          // hashed by pre-save hook
-      role: 'admin',
-      walletBalance: 1_000_000,
-      watchlists: [{ name: 'My Watchlist', stocks: [] }],
-    });
-    await Portfolio.create({ userId: admin._id, holdings: [] });
-    console.log('  ✅ Demo admin created  →  admin@Investo.com / admin123456');
-  } else {
-    console.log(`  ✅ Users collection already has ${userCount} document(s)`);
+  // ── 1. Clean duplicate portfolios if any exist ───────────
+  try {
+    const allPortfolios = await Portfolio.find().sort({ updatedAt: -1 });
+    const seenUsers = new Map();
+    for (const p of allPortfolios) {
+      if (!p.userId) {
+        await Portfolio.deleteOne({ _id: p._id });
+        continue;
+      }
+      const uid = p.userId.toString();
+      if (!seenUsers.has(uid)) {
+        seenUsers.set(uid, p);
+      } else {
+        const existing = seenUsers.get(uid);
+        // Keep the one with holdings if existing has none
+        if ((!existing.holdings || existing.holdings.length === 0) && (p.holdings && p.holdings.length > 0)) {
+          await Portfolio.deleteOne({ _id: existing._id });
+          seenUsers.set(uid, p);
+        } else {
+          await Portfolio.deleteOne({ _id: p._id });
+        }
+      }
+    }
+  } catch (err) {
+    console.warn('⚠️  Warning during portfolio cleanup:', err.message);
   }
 
-  // ── 3. Seed active monthly competition if none exists ────
-  const now   = new Date();
-  const month = now.getMonth() + 1;
-  const year  = now.getFullYear();
-  const existing = await Competition.findOne({ month, year });
-
-  if (!existing) {
-    const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    await Competition.create({
-      name:      `Investo ${monthNames[month - 1]} ${year} Championship`,
-      month,
-      year,
-      startDate: new Date(year, month - 1, 1),
-      endDate:   new Date(year, month, 0, 23, 59, 59),
-      status:    'active',
-    });
-    console.log(`  ✅ Monthly competition created for ${monthNames[month - 1]} ${year}`);
-  } else {
-    console.log('  ✅ Monthly competition already exists');
+  // ── 2. Ensure indexes are created safely ─────────────────
+  try {
+    await User.createIndexes();
+    await Portfolio.createIndexes();
+    await Transaction.createIndexes();
+    console.log('  ✅ Indexes ensured');
+  } catch (err) {
+    console.warn('  ⚠️  Index warning:', err.message);
   }
 
   console.log('🎉 Database ready!\n');

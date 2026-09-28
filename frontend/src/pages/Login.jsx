@@ -62,13 +62,6 @@ export default function Login() {
             <Link to="/register" style={{ color: 'var(--blue)', textDecoration: 'none', fontWeight: 600 }}>Create one</Link>
           </p>
 
-
-          <div style={{ marginTop: '1rem', textAlign: 'center', paddingTop: '1rem', borderTop: '1px solid var(--border)' }}>
-            <a href="/admin/login" style={{ color: 'var(--red)', fontSize: '0.8rem', textDecoration: 'none', fontWeight: 500 }}>
-              🛡️ Admin Login
-            </a>
-          </div>
-
           <div className="alert alert-info" style={{ marginTop: '1.5rem' }}>
             🎯 Register to get ₹10,00,000 virtual money instantly!
           </div>
@@ -84,7 +77,7 @@ export default function Login() {
           {[
             { icon: '💰', title: '₹10 Lakh Virtual Cash', desc: 'Start trading immediately with virtual money' },
             { icon: '📈', title: 'Real NSE Market Data', desc: 'Live Market Data' },
-            { icon: '🏆', title: 'Monthly Competitions', desc: 'Compete with traders across India' },
+            { icon: '⚡', title: 'Real-time Execution', desc: 'Instant paper trade execution and tracking' },
             { icon: '📊', title: 'Portfolio Analytics', desc: 'Charts, P&L tracking, and reports' },
           ].map((f, i) => (
             <div key={i} style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem' }}>

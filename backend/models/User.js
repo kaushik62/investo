@@ -32,11 +32,6 @@ const userSchema = new mongoose.Schema({
     default: 1000000,
     min: 0
   },
-  role: {
-    type: String,
-    enum: ['user', 'admin'],
-    default: 'user'
-  },
   watchlists: [{
     name: { type: String, default: 'My Watchlist' },
     stocks: [String]
@@ -49,7 +44,7 @@ const userSchema = new mongoose.Schema({
   }],
   notifications: [{
     message: String,
-    type: { type: String, enum: ['trade', 'alert', 'competition', 'system'] },
+    type: { type: String, enum: ['trade', 'alert', 'system'] },
     read: { type: Boolean, default: false },
     createdAt: { type: Date, default: Date.now }
   }],
