@@ -24,8 +24,10 @@ export default function Leaderboard() {
       .finally(() => setLoading(false))
   }, [])
 
-  const myRank = rankings.find((r) => r.userId?.toString() === user?._id?.toString())
-  const list = tab === 'overall' ? rankings : (competition?.participants || [])
+  // Admin users are excluded from leaderboard rankings
+  const myRank = user?.role === 'admin' ? null : rankings.find((r) => r.userId?.toString() === user?._id?.toString())
+  const rawList = tab === 'overall' ? rankings : (competition?.participants || [])
+  const list = rawList.filter(e => e.role !== 'admin' && e.userId?.role !== 'admin')
 
   if (loading) return <Spinner text="Loading leaderboard…" />
 
@@ -36,7 +38,7 @@ export default function Leaderboard() {
         <p style={{ color: 'var(--text-secondary)', marginTop: 4 }}>Ranked by portfolio return %</p>
       </div>
 
-      {/* My rank */}
+      {/* My rank banner (users only) */}
       {myRank && (
         <div style={{
           background: 'linear-gradient(135deg, rgba(67,97,238,0.18), rgba(6,214,160,0.08))',

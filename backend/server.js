@@ -62,7 +62,6 @@ app.use('/api/auth', authLimiter);
 app.use('/api/',     apiLimiter);
 
 // ── Body Parsing ──────────────────────────────────────────────
-app.use('/api/stripe/webhook', express.raw({ type: 'application/json' }));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
@@ -81,7 +80,6 @@ app.use('/api/watchlist',     require('./routes/watchlist'));
 app.use('/api/transactions',  require('./routes/transactions'));
 app.use('/api/leaderboard',   require('./routes/leaderboard'));
 app.use('/api/admin',         require('./routes/admin'));
-app.use('/api/stripe',        require('./routes/stripe'));
 app.use('/api/export',        require('./routes/export'));
 app.use('/api/notifications', require('./routes/notifications'));
 

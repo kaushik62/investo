@@ -16,7 +16,7 @@ export function MarketProvider({ children }) {
   const fetchedOnce  = useRef(false)
   const notifFetched = useRef(false)
 
-  // ── Initial market data fetch (auth-gated) ────────────────
+  // Fetch initial market data once on mount
   useEffect(() => {
     const token = localStorage.getItem('token')
     if (!token || fetchedOnce.current) return
@@ -29,9 +29,9 @@ export function MarketProvider({ children }) {
         setDataSource(r.data.data.source || 'unknown')
       })
       .catch(() => { fetchedOnce.current = false })
-  })
+  }, [])
 
-  // ── Load persisted notifications from DB ─────────────────
+  // Load persisted notifications from the database once on mount
   useEffect(() => {
     const token = localStorage.getItem('token')
     if (!token || notifFetched.current) return
@@ -44,7 +44,7 @@ export function MarketProvider({ children }) {
         setUnreadCount(notifs.filter(n => !n.read).length)
       })
       .catch(() => { notifFetched.current = false })
-  })
+  }, [])
 
   // ── Bind Socket.IO events ─────────────────────────────────
   useEffect(() => {

@@ -37,13 +37,6 @@ const userSchema = new mongoose.Schema({
     enum: ['user', 'admin'],
     default: 'user'
   },
-  subscription: {
-    plan: { type: String, enum: ['free', 'premium'], default: 'free' },
-    stripeCustomerId: String,
-    stripeSubscriptionId: String,
-    status: { type: String, enum: ['active', 'inactive', 'canceled'], default: 'inactive' },
-    currentPeriodEnd: Date
-  },
   watchlists: [{
     name: { type: String, default: 'My Watchlist' },
     stocks: [String]
@@ -56,7 +49,7 @@ const userSchema = new mongoose.Schema({
   }],
   notifications: [{
     message: String,
-    type: { type: String, enum: ['trade', 'alert', 'competition', 'subscription', 'system'] },
+    type: { type: String, enum: ['trade', 'alert', 'competition', 'system'] },
     read: { type: Boolean, default: false },
     createdAt: { type: Date, default: Date.now }
   }],

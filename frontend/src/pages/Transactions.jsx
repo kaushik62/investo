@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { transactionAPI, exportAPI } from '../services/api'
+import { transactionAPI } from '../services/api'
 import Spinner from '../components/common/Spinner'
 
 export default function Transactions() {
@@ -22,9 +22,19 @@ export default function Transactions() {
   const handleExport = async () => {
     setExporting(true)
     try {
-      const r = await exportAPI.downloadCSV()
-      if (r.data.data?.url) window.open(r.data.data.url, '_blank')
-    } catch (err) { alert('Export failed: ' + (err.response?.data?.error || err.message)) }
+      const token = localStorage.getItem('token')
+      const res = await fetch('/api/export/transactions/csv', {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      if (!res.ok) throw new Error('Export failed')
+      const blob = await res.blob()
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = 'transactions.csv'
+      a.click()
+      URL.revokeObjectURL(url)
+    } catch (err) { alert('Export failed: ' + err.message) }
     finally { setExporting(false) }
   }
 

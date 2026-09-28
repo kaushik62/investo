@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts'
-import { portfolioAPI, exportAPI } from '../services/api'
+import { portfolioAPI } from '../services/api'
 import Spinner from '../components/common/Spinner'
 
 const COLORS = ['#4361ee','#06d6a0','#ffd166','#ef233c','#118ab2','#7b2d8b','#f77f00','#2ec4b6','#e71d36','#ff9f1c']
@@ -18,10 +18,20 @@ export default function Portfolio() {
   const handleExport = async () => {
     setExporting(true)
     try {
-      const r = await exportAPI.downloadPDF()
-      if (r.data.data?.url) window.open(r.data.data.url, '_blank')
+      const token = localStorage.getItem('token')
+      const res = await fetch('/api/export/portfolio/pdf', {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      if (!res.ok) throw new Error('Export failed')
+      const blob = await res.blob()
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = 'portfolio_report.pdf'
+      a.click()
+      URL.revokeObjectURL(url)
     } catch (err) {
-      alert('Export failed: ' + (err.response?.data?.error || err.message))
+      alert('Export failed: ' + err.message)
     } finally { setExporting(false) }
   }
 

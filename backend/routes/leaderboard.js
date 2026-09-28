@@ -18,13 +18,14 @@ router.get('/', auth, async (req, res) => {
     const stocks     = liveStocks.length > 0 ? liveStocks : await getAllStockQuotes();
     const stockMap   = Object.fromEntries(stocks.map(s => [s.symbol, s.price]));
 
-    const portfolios = await Portfolio.find().populate('userId', 'name email avatar');
+    const portfolios = await Portfolio.find().populate('userId', 'name email avatar role');
     const rankings = [];
 
     for (const portfolio of portfolios) {
       if (!portfolio.userId) continue;
       const user = await User.findById(portfolio.userId._id);
-      if (!user) continue;
+      // Exclude admin accounts from the leaderboard
+      if (!user || user.role === 'admin') continue;
 
       let holdingsValue = 0;
       portfolio.holdings.forEach(h => {
@@ -43,6 +44,7 @@ router.get('/', auth, async (req, res) => {
         name:             portfolio.userId.name,
         email:            portfolio.userId.email,
         avatar:           portfolio.userId.avatar,
+        role:             user.role,
         portfolioValue:   totalValue,
         walletBalance:    user.walletBalance,
         holdingsValue:    parseFloat(holdingsValue.toFixed(2)),
@@ -64,7 +66,16 @@ router.get('/', auth, async (req, res) => {
 router.get('/competition', auth, async (req, res) => {
   try {
     const competition = await Competition.findOne({ status: 'active' })
-      .populate('participants.userId', 'name avatar email');
+      .populate('participants.userId', 'name avatar email role');
+    
+    if (competition && competition.participants) {
+      const compObj = competition.toObject();
+      compObj.participants = compObj.participants
+        .filter(p => p.userId && p.userId.role !== 'admin')
+        .map((p, i) => ({ ...p, rank: i + 1 }));
+      return res.json({ success: true, data: compObj });
+    }
+
     res.json({ success: true, data: competition });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });

@@ -4,7 +4,7 @@ Full-stack MERN app with Redis caching, Alpha Vantage live prices, Socket.IO rea
 
 ---
 
-##  Quick Start
+## Quick Start
 
 ### 1. Install
 ```
@@ -46,10 +46,10 @@ npm run dev
 ### Option A — Admin Login Page (recommended)
 Go to: **http://localhost:3000/admin/login**
 
-| Field    | Value                       |
-|----------|-----------------------------|
-| Email    | `admin@Investo.com`     |
-| Password | `admin123456`               |
+| Field    | Value               |
+|----------|---------------------|
+| Email    | `admin@Investo.com` |
+| Password | `admin123456`       |
 
 > Credentials are clickable on the login page — just click them to autofill.
 
@@ -61,7 +61,7 @@ Login as admin via http://localhost:3000/login → click your name → **Admin**
 ## Admin Capabilities
 
 | Tab | Features |
-|-----|---------|
+|-----|----------|
 | Overview | Daily trade chart, most traded stocks, revenue stats |
 | Users | Search users, block/unblock, promote to admin, adjust wallet ₹, delete |
 | Transactions | All trades across all users, filter by BUY/SELL |
@@ -83,6 +83,7 @@ Redis is **optional** — the app works without it using in-memory fallback.
 | `leaderboard:all` | 2min | Rankings |
 | `admin:stats` | 60s | Admin dashboard stats |
 
+---
 
 ## Tech Stack
 
@@ -94,8 +95,7 @@ Redis is **optional** — the app works without it using in-memory fallback.
 | Cache | Redis (ioredis) with memory fallback |
 | Auth | JWT + bcrypt |
 | Market Data | Alpha Vantage API (free tier) |
-| Payments | Stripe (optional) |
-| Exports | AWS S3 + PDFKit (optional) |
+| Exports | PDFKit (portfolio PDF) + direct CSV download |
 
 ---
 
@@ -107,18 +107,17 @@ Investo/
 │   ├── server.js
 │   ├── .env.example
 │   ├── controllers/     authController, stockController, portfolioController, tradeController
-│   ├── middleware/      auth.js (JWT + admin + premium guards)
+│   ├── middleware/      auth.js (JWT + admin guards)
 │   ├── models/          User, Portfolio, Transaction, Competition
 │   ├── routes/          auth, stocks, trades, portfolio, watchlist, transactions,
-│   │                    leaderboard, admin, stripe, export, notifications
-│   ├── services/        stockService (AV), socketService, cronService,
-│   │                    redisService, s3Service
+│   │                    leaderboard, admin, export, notifications
+│   ├── services/        stockService (AV), socketService, cronService, redisService
 │   └── utils/           setupDatabase.js (auto-seed)
 └── frontend/
     └── src/
         ├── pages/       Login, Register, AdminLogin, Dashboard, Market,
         │                StockDetail, Portfolio, Watchlist, Transactions,
-        │                Leaderboard, Subscription, Profile, Admin
+        │                Leaderboard, Profile, Admin
         ├── components/  Navbar, StockTicker, Spinner, ProtectedRoute, AppLayout
         ├── context/     AuthContext, MarketContext
         └── services/    api.js, socket.js

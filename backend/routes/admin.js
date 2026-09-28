@@ -16,10 +16,9 @@ router.get('/stats', adminAuth, async (req, res) => {
   } catch { /* proceed without cache */ }
 
   try {
-    const [totalUsers, totalTrades, activeSubscriptions, competitions] = await Promise.all([
+    const [totalUsers, totalTrades, competitions] = await Promise.all([
       User.countDocuments(),
       Transaction.countDocuments(),
-      User.countDocuments({ 'subscription.plan': 'premium', 'subscription.status': 'active' }),
       Competition.find({ status: { $in: ['active', 'completed'] } }).sort({ createdAt: -1 }).limit(6),
     ]);
 
@@ -32,9 +31,6 @@ router.get('/stats', adminAuth, async (req, res) => {
       { $sort: { _id: -1 } },
       { $limit: 7 },
     ]);
-
-    // Revenue (premium subs × ₹999)
-    const revenue = activeSubscriptions * 999;
 
     // New users today
     const todayStart = new Date(); todayStart.setHours(0,0,0,0);
@@ -50,7 +46,7 @@ router.get('/stats', adminAuth, async (req, res) => {
       { $limit: 5 },
     ]);
 
-    const statsData = { totalUsers, totalTrades, activeSubscriptions, revenue, newUsersToday, tradesToday, competitions, recentTrades, topSymbols };
+    const statsData = { totalUsers, totalTrades, newUsersToday, tradesToday, competitions, recentTrades, topSymbols };
     try { await redis.set(redis.KEYS.adminStats, statsData, redis.TTL.adminStats); } catch {}
     res.json({
       success: true,
@@ -64,12 +60,11 @@ router.get('/stats', adminAuth, async (req, res) => {
 // ── GET /api/admin/users ──────────────────────────────────────
 router.get('/users', adminAuth, async (req, res) => {
   try {
-    const { page = 1, limit = 20, search, role, plan } = req.query;
+    const { page = 1, limit = 20, search, role } = req.query;
     const query = {};
     if (search) query.$or = [{ name: new RegExp(search, 'i') }, { email: new RegExp(search, 'i') }];
     if (role)   query.role = role;
-    if (plan)   query['subscription.plan'] = plan;
-
+    
     const [users, total] = await Promise.all([
       User.find(query).select('-password').sort({ createdAt: -1 })
         .skip((page - 1) * limit).limit(parseInt(limit)),
@@ -243,10 +238,3 @@ router.put('/competition/:id', adminAuth, async (req, res) => {
 });
 
 module.exports = router;
-
-// Invalidate admin stats cache on user changes
-const invalidateAdminCache = async () => {
-  const redis = require('../services/redisService');
-  await redis.del(redis.KEYS.adminStats);
-  await redis.del(redis.KEYS.leaderboard);
-};

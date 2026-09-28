@@ -62,8 +62,7 @@ export default function Admin() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(165px,1fr))', gap: '1rem', marginBottom: '2rem' }}>
         <Stat label="Total Users"         value={fmt(stats?.totalUsers)}          icon="👥" color="var(--blue)"  sub={`+${stats?.newUsersToday ?? 0} today`} />
         <Stat label="Total Trades"        value={fmt(stats?.totalTrades)}         icon="📊" color="var(--green)" sub={`${stats?.tradesToday ?? 0} today`} />
-        <Stat label="Premium Subscribers" value={fmt(stats?.activeSubscriptions)} icon="⭐" color="var(--gold)"  sub={`${fmtR(stats?.revenue)} revenue`} />
-        <Stat label="Active Competitions" value={stats?.competitions?.filter(c=>c.status==='active').length ?? 0} icon="🏆" color="var(--red)" />
+                <Stat label="Active Competitions" value={stats?.competitions?.filter(c=>c.status==='active').length ?? 0} icon="🏆" color="var(--red)" />
       </div>
 
       {/* Tabs */}
@@ -219,7 +218,7 @@ function UsersTab({ adminId }) {
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.84rem' }}>
               <thead>
                 <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                  {['Name','Email','Wallet','Plan','Role','Status','Joined','Actions'].map(h => (
+                  {['Name','Email','Wallet','Role','Status','Joined','Actions'].map(h => (
                     <th key={h} style={{ padding: '8px 10px', textAlign: 'left', color: 'var(--text-secondary)', fontSize: '0.75rem', fontWeight: 500 }}>{h}</th>
                   ))}
                 </tr>
@@ -238,8 +237,7 @@ function UsersTab({ adminId }) {
                     </td>
                     <td style={{ padding: '11px 10px', color: 'var(--text-secondary)', fontSize: '0.8rem' }}>{u.email}</td>
                     <td className="font-mono" style={{ padding: '11px 10px', fontSize: '0.8rem' }}>{fmtR(u.walletBalance)}</td>
-                    <td style={{ padding: '11px 10px' }}><span className={`badge ${u.subscription?.plan === 'premium' ? 'badge-gold' : 'badge-blue'}`}>{u.subscription?.plan || 'free'}</span></td>
-                    <td style={{ padding: '11px 10px' }}><span className={`badge ${u.role === 'admin' ? 'badge-red' : 'badge-blue'}`}>{u.role}</span></td>
+                                        <td style={{ padding: '11px 10px' }}><span className={`badge ${u.role === 'admin' ? 'badge-red' : 'badge-blue'}`}>{u.role}</span></td>
                     <td style={{ padding: '11px 10px' }}><span className={`badge ${u.isActive ? 'badge-green' : 'badge-red'}`}>{u.isActive ? 'Active' : 'Blocked'}</span></td>
                     <td style={{ padding: '11px 10px', color: 'var(--text-secondary)', fontSize: '0.75rem' }}>{new Date(u.createdAt).toLocaleDateString('en-IN')}</td>
                     <td style={{ padding: '11px 10px' }}>

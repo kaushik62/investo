@@ -75,13 +75,13 @@ export default function Dashboard() {
       {/* Greeting */}
       <div style={{ marginBottom: '1.75rem' }}>
         <h1 className="font-display" style={{ fontSize: '1.7rem', fontWeight: 700 }}>
-          Good {new Date().getHours() < 12 ? 'Morning' : new Date().getHours() < 17 ? 'Afternoon' : 'Evening'}, {user?.name?.split(' ')[0]} 👋
+          Welcome back, {user?.name?.split(' ')[0]} 👋
         </h1>
         <p style={{ color: 'var(--text-secondary)', marginTop: 4 }}>Here's what's happening in Indian markets today</p>
       </div>
 
       {/* Stat Cards */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(185px,1fr))', gap: '1rem', marginBottom: '2rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px,1fr))', gap: '1rem', marginBottom: '2rem' }}>
         <StatCard label="Wallet Balance" icon="💰"
           value={`₹${user?.walletBalance?.toLocaleString('en-IN', { maximumFractionDigits: 0 })}`}
           accent="var(--blue)" />
@@ -91,9 +91,6 @@ export default function Dashboard() {
           subColor={nifty?.changePercent >= 0 ? 'var(--green)' : 'var(--red)'}
           accent={nifty?.changePercent >= 0 ? 'var(--green)' : 'var(--red)'} />
         <StatCard label="Stocks Tracked" icon="📈" value={stocks.length} accent="var(--gold)" />
-        <StatCard label="Plan" icon="🎯"
-          value={user?.subscription?.plan === 'premium' ? 'Premium ⭐' : 'Free'}
-          accent={user?.subscription?.plan === 'premium' ? 'var(--gold)' : 'var(--text-secondary)'} />
       </div>
 
       {/* Quick actions */}

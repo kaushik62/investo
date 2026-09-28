@@ -1,42 +1,61 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { watchlistAPI } from '../services/api'
-import { useMarket } from '../context/MarketContext'
-import { useAuth } from '../context/AuthContext'
+import { useQuery } from '@tanstack/react-query'
+import { watchlistAPI, stockAPI } from '../services/api'
 import Spinner from '../components/common/Spinner'
 
-const ALL_STOCKS = ['RELIANCE.NS','TCS.NS','INFY.NS','HDFCBANK.NS','ICICIBANK.NS','SBIN.NS','TATAMOTORS.NS','LT.NS','ITC.NS','BHARTIARTL.NS']
+const ALL_STOCKS = [
+  'RELIANCE.NS', 'TCS.NS', 'HDFCBANK.NS', 'INFY.NS', 'ICICIBANK.NS',
+  'HINDUNILVR.NS', 'ITC.NS', 'SBIN.NS', 'BHARTIARTL.NS', 'KOTAKBANK.NS',
+  'LT.NS', 'AXISBANK.NS', 'WIPRO.NS', 'HCLTECH.NS', 'ASIANPAINT.NS',
+]
 
 export default function Watchlist() {
-  const { user } = useAuth()
-  const { stocks } = useMarket()
   const [watchlists, setWatchlists] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [selIdx, setSelIdx] = useState(0)
-  const [msg, setMsg] = useState(null)
+  const [selIdx,     setSelIdx]     = useState(0)
+  const [msg,        setMsg]        = useState(null)
 
-  const priceMap = Object.fromEntries(stocks.map((s) => [s.symbol, s]))
+  const { isLoading: loading } = useQuery({
+    queryKey: ['watchlist'],
+    queryFn: async () => {
+      const res = await watchlistAPI.get()
+      setWatchlists(res.data.data)
+      return res.data.data
+    },
+  })
 
-  useEffect(() => {
-    watchlistAPI.get().then((r) => setWatchlists(r.data.data || [])).catch(console.error).finally(() => setLoading(false))
-  }, [])
-
-  const flash = (text, type = 'success') => { setMsg({ text, type }); setTimeout(() => setMsg(null), 3000) }
+  const { data: priceMap = {} } = useQuery({
+    queryKey: ['stocks-overview'],
+    queryFn: async () => {
+      const res = await stockAPI.getOverview()
+      const map = {}
+      ;(res.data.data || []).forEach((s) => { map[s.symbol] = s })
+      return map
+    },
+    refetchInterval: 10_000,
+  })
 
   const addStock = async (symbol) => {
-    if (!watchlists[selIdx]) return
+    const wl = watchlists[selIdx]
+    if (!wl) return
     try {
-      const r = await watchlistAPI.addStock(watchlists[selIdx]._id, symbol)
-      const upd = [...watchlists]; upd[selIdx] = r.data.data; setWatchlists(upd)
-      flash(`${symbol.replace('.NS','')} added!`)
-    } catch (err) { flash(err.response?.data?.error || 'Failed', 'error') }
+      const res = await watchlistAPI.addStock(wl._id, symbol)
+      setWatchlists(watchlists.map((w, i) => i === selIdx ? res.data.data : w))
+      setMsg({ type: 'success', text: `Added ${symbol.replace('.NS','')} to ${wl.name}` })
+    } catch (err) {
+      setMsg({ type: 'error', text: err.response?.data?.error || 'Failed to add' })
+    }
   }
 
   const removeStock = async (symbol) => {
+    const wl = watchlists[selIdx]
+    if (!wl) return
     try {
-      const r = await watchlistAPI.removeStock(watchlists[selIdx]._id, symbol)
-      const upd = [...watchlists]; upd[selIdx] = r.data.data; setWatchlists(upd)
-    } catch (err) { flash(err.response?.data?.error || 'Failed', 'error') }
+      const res = await watchlistAPI.removeStock(wl._id, symbol)
+      setWatchlists(watchlists.map((w, i) => i === selIdx ? res.data.data : w))
+    } catch (err) {
+      setMsg({ type: 'error', text: err.response?.data?.error || 'Failed to remove' })
+    }
   }
 
   if (loading) return <Spinner text="Loading watchlist…" />
@@ -52,14 +71,12 @@ export default function Watchlist() {
           <h1 className="font-display" style={{ fontSize: '1.7rem', fontWeight: 700 }}>👁️ Watchlist</h1>
           <p style={{ color: 'var(--text-secondary)', marginTop: 4 }}>Track your favourite stocks</p>
         </div>
-        {user?.subscription?.plan === 'premium' && (
-          <button className="btn btn-primary" onClick={async () => {
-            const name = prompt('Watchlist name?')
-            if (!name) return
-            const r = await watchlistAPI.create(name)
-            setWatchlists(r.data.data)
-          }}>+ New Watchlist</button>
-        )}
+        <button className="btn btn-primary" onClick={async () => {
+          const name = prompt('Watchlist name?')
+          if (!name) return
+          const r = await watchlistAPI.create(name)
+          setWatchlists(r.data.data)
+        }}>+ New Watchlist</button>
       </div>
 
       {/* Tabs */}
@@ -133,14 +150,6 @@ export default function Watchlist() {
             })}
             {available.length === 0 && <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', textAlign: 'center' }}>All stocks added ✓</p>}
           </div>
-          {user?.subscription?.plan !== 'premium' && (
-            <div className="alert alert-info" style={{ marginTop: '1.25rem', fontSize: '0.8rem' }}>
-              ⭐ Upgrade for multiple watchlists
-              <div style={{ marginTop: 8 }}>
-                <Link to="/subscription"><button className="btn btn-primary" style={{ padding: '5px 12px', fontSize: '0.78rem' }}>Upgrade</button></Link>
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </div>

@@ -36,14 +36,4 @@ const adminAuth = async (req, res, next) => {
   });
 };
 
-const premiumAuth = async (req, res, next) => {
-  auth(req, res, () => {
-    const sub = req.user?.subscription;
-    if (sub?.plan !== 'premium' || sub?.status !== 'active') {
-      return res.status(403).json({ success: false, error: 'Premium subscription required.' });
-    }
-    next();
-  });
-};
-
-module.exports = { auth, adminAuth, premiumAuth };
+module.exports = { auth, adminAuth };

@@ -17,7 +17,6 @@ const NOTIF_ICONS = {
   trade:       '📊',
   alert:       '🔔',
   competition: '🏆',
-  subscription:'⭐',
   system:      '📢',
 }
 
@@ -276,9 +275,7 @@ export default function Navbar() {
                   fontWeight: 700, fontSize: '0.8rem', color: '#fff',
                 }}>{user?.name?.[0]?.toUpperCase()}</div>
                 <span style={{ fontSize: '0.84rem', fontWeight: 500 }}>{user?.name?.split(' ')[0]}</span>
-                {user?.subscription?.plan === 'premium' && (
-                  <span className="badge badge-gold" style={{ fontSize: '0.62rem' }}>PRO</span>
-                )}
+                
               </button>
 
               {menu && (
@@ -296,7 +293,7 @@ export default function Navbar() {
                   </div>
                   {[
                     { to: '/profile',      label: '👤 Profile' },
-                    { to: '/subscription', label: '⭐ Subscription' },
+                    
                     ...(user?.role === 'admin' ? [{ to: '/admin', label: '🛡️ Admin' }] : []),
                   ].map(item => (
                     <Link key={item.to} to={item.to} onClick={() => setMenu(false)} style={{
@@ -352,18 +349,18 @@ export default function Navbar() {
 
 // ── Helpers ───────────────────────────────────────────────────
 function getNotifBg(type) {
-  const map = { trade:'rgba(6,214,160,0.12)', alert:'rgba(255,209,102,0.12)', competition:'rgba(239,35,60,0.12)', subscription:'rgba(255,209,102,0.12)', system:'rgba(67,97,238,0.12)' }
+  const map = { trade:'rgba(6,214,160,0.12)', alert:'rgba(255,209,102,0.12)', competition:'rgba(239,35,60,0.12)', system:'rgba(67,97,238,0.12)' }
   return map[type] || 'rgba(67,97,238,0.12)'
 }
 function getNotifBadge(type) {
-  const map = { trade:'green', alert:'gold', competition:'red', subscription:'gold', system:'blue' }
+  const map = { trade:'green', alert:'gold', competition:'red', system:'blue' }
   return map[type] || 'blue'
 }
 function getNotifAccentColor(type) {
-  const map = { trade:'var(--green)', alert:'var(--gold)', competition:'var(--red)', subscription:'var(--gold)', system:'var(--blue)' }
+  const map = { trade:'var(--green)', alert:'var(--gold)', competition:'var(--red)', system:'var(--blue)' }
   return map[type] || 'var(--blue)'
 }
 function getNotifBorderColor(type) {
-  const map = { trade:'rgba(6,214,160,0.25)', alert:'rgba(255,209,102,0.25)', competition:'rgba(239,35,60,0.25)', subscription:'rgba(255,209,102,0.25)', system:'rgba(67,97,238,0.25)' }
+  const map = { trade:'rgba(6,214,160,0.25)', alert:'rgba(255,209,102,0.25)', competition:'rgba(239,35,60,0.25)', system:'rgba(67,97,238,0.25)' }
   return map[type] || 'var(--border)'
 }

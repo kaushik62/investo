@@ -53,12 +53,11 @@ export default function Profile() {
             <div>
               <div className="font-display" style={{ fontSize: '1.2rem', fontWeight: 700 }}>{user?.name}</div>
               <div style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>{user?.email}</div>
-              <div style={{ display: 'flex', gap: 6, marginTop: 6 }}>
-                <span className={`badge ${user?.subscription?.plan === 'premium' ? 'badge-gold' : 'badge-blue'}`}>
-                  {user?.subscription?.plan === 'premium' ? '⭐ Premium' : 'Free Plan'}
-                </span>
-                {user?.role === 'admin' && <span className="badge badge-red">Admin</span>}
-              </div>
+              {user?.role === 'admin' && (
+                <div style={{ marginTop: 6 }}>
+                  <span className="badge badge-red">Admin</span>
+                </div>
+              )}
             </div>
           </div>
 

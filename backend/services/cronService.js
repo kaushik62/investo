@@ -11,7 +11,7 @@ const startMarketCronJob = (io) => {
   cron.schedule('0 * * * *', async () => {
     await updateCompetitionRankings();
   });
- 
+
   cron.schedule('0 0 1 * *', async () => {
     await createMonthlyCompetition();
   });
@@ -42,7 +42,7 @@ const updateCompetitionRankings = async () => {
 
     for (const portfolio of portfolios) {
       const user = await User.findById(portfolio.userId);
-      if (!user) continue;
+      if (!user || user.role === 'admin') continue;
       let currentValue = user.walletBalance;
       portfolio.holdings.forEach(h => {
         const price = stockMap[h.symbol] || stockMap[h.symbol?.replace('.NS', '.BSE')] || h.averageBuyPrice;

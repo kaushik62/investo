@@ -91,17 +91,6 @@ export const adminAPI = {
   updateCompetition:  (id, d)  => API.put(`/admin/competition/${id}`, d),
 }
 
-export const stripeAPI = {
-  createCheckout:     () => API.post('/stripe/create-checkout-session'),
-  cancelSubscription: () => API.post('/stripe/cancel-subscription'),
-  getStatus:          () => API.get('/stripe/subscription-status'),
-}
-
-export const exportAPI = {
-  downloadCSV: () => API.get('/export/transactions/csv'),
-  downloadPDF: () => API.get('/export/portfolio/pdf'),
-}
-
 export const notificationAPI = {
   get:           () => API.get('/notifications'),
   markAllRead:   () => API.put('/notifications/read-all'),
